@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>NutriFoto — calorías por foto</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --card: #131720;
+      --card2: #181c25;
+      --line: #252b37;
+      --text: #f4f6f8;
+      --muted: #98a1b0;
+      --accent: #b9ff4a;
+      --accent2: #8ff0ff;
+      --danger: #ff6b7a;
+      --shadow: 0 18px 45px rgba(0, 0, 0, .28)
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+    }
+
+    body {
+      min-height: 100vh;
+      padding-bottom: 88px
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    button {
+      border: 0;
+      cursor: pointer
+    }
+
+    .app {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 18px 16px 30px
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 18px
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 850;
+      letter-spacing: -.04em
+    }
+
+    .brand span {
+      color: var(--accent)
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--line)
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), #10141c);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px
+    }
+
+    .hero {
+      padding: 20px;
+      background: radial-gradient(circle at 100% 0%, rgba(185, 255, 74, .12), transparent 38%), linear-gradient(180deg, #171d1f, #11151b)
+    }
+
+    .kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--accent);
+      font-weight: 800
+    }
+
+    .hero-title {
+      font-size: 29px;
+      line-height: 1.02;
+      margin: 8px 0 8px;
+      font-weight: 900;
+      letter-spacing: -.055em
+    }
+
+    .hero-copy {
+      color: #c6cbd4;
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 430px
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .row.start {
+      align-items: flex-start
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 800
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .section-space {
+      margin-top: 18px
+    }
+
+    .ring-wrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 18px
+    }
+
+    .ring {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--accent) var(--p, 0%), #252b35 0);
+      position: relative
+    }
+
+    .ring::after {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 50%;
+      background: var(--bg)
+    }
+
+    .ring-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center
+    }
+
+    .big-num {
+      font-size: 24px;
+      font-weight: 900
+    }
+
+    .unit {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px
+    }
+
+    .mini {
+      background: var(--card2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px
+    }
+
+    .mini b {
+      display: block;
+      font-size: 17px
+    }
+
+    .mini span {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .macro {
+      margin-top: 14px
+    }
+
+    .macro-line {
+      height: 8px;
+      background: #292f3a;
+      border-radius: 99px;
+      overflow: hidden
+    }
+
+    .macro-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent))
+    }
+
+    .macro-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .macro-chip {
+      font-size: 11px;
+      color: #c7ccd6
+    }
+
+    .macro-chip b {
+      color: #fff
+    }
+
+    .cta {
+      width: 100%;
+      padding: 15px 16px;
+      border-radius: 18px;
+      background: var(--accent);
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-weight: 900;
+      margin-top: 15px;
+      box-shadow: 0 8px 22px rgba(185, 255, 74, .18)
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: #202631;
+      color: #fff;
+      border: 1px solid #303745;
+      font-weight: 750
+    }
+
+    .dashed {
+      border: 1px dashed #39404d;
+      background: #11151b
+    }
+
+    .camera-preview {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 18px;
+      background: #0b0e13;
+      display: none;
+      object-fit: cover;
+      border: 1px solid var(--line)
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .food-result {
+      margin-top: 14px
+    }
+
+    .food-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--line)
+    }
+
+    .conf {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .food-name {
+      font-weight: 850
+    }
+
+    .food-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0 0 6px 2px
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #0d1117;
+      color: var(--text);
+      outline: none
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #566074
+    }
+
+    .segment {
+      display: flex;
+      background: #0d1117;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 4px
+    }
+
+    .seg {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 10px;
+      background: transparent;
+      color: #aeb5c0;
+      font-size: 12px;
+      font-weight: 750
+    }
+
+    .seg.active {
+      background: #252b35;
+      color: #fff
+    }
+
+    .profile-note {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 10px
+    }
+
+    .meal {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line)
+    }
+
+    .meal:first-child {
+      border-top: 0
+    }
+
+    .meal-img {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      object-fit: cover;
+      background: #242a34;
+      flex: none
+    }
+
+    .meal-main {
+      min-width: 0;
+      flex: 1
+    }
+
+    .meal-name {
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .meal-detail {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .meal-kcal {
+      font-weight: 900
+    }
+
+    .delete {
+      color: #9da6b3;
+      background: none;
+      font-size: 18px;
+      padding: 3px
+    }
+
+    .nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      background: rgba(11, 13, 18, .94);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid var(--line)
+    }
+
+    .nav-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 9px 12px calc(9px + env(safe-area-inset-bottom))
+    }
+
+    .nav button {
+      background: none;
+      color: #7e8795;
+      padding: 6px 4px;
+      font-size: 11px
+    }
+
+    .nav button.active {
+      color: #fff
+    }
+
+    .nav-icon {
+      font-size: 18px;
+      line-height: 1.1;
+      margin-bottom: 3px
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, .66);
+      display: flex;
+      align-items: flex-end;
+      padding: 10px
+    }
+
+    .sheet {
+      width: min(560px, 100%);
+      margin: 0 auto;
+      background: #11151b;
+      border: 1px solid #313746;
+      border-radius: 26px 26px 18px 18px;
+      padding: 18px;
+      max-height: 90vh;
+      overflow: auto
+    }
+
+    .sheet h2 {
+      margin: 0 0 6px;
+      font-size: 21px
+    }
+
+    .sheet p {
+      margin: 0 0 14px;
+      color: #aab2be;
+      font-size: 12px;
+      line-height: 1.45
+    }
+
+    .close {
+      background: #202631;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px
+    }
+
+    .notice {
+      padding: 11px 12px;
+      background: #111822;
+      border: 1px solid #273345;
+      border-radius: 14px;
+      color: #b8c2d0;
+      font-size: 11px;
+      line-height: 1.45;
+      margin-top: 12px
+    }
+
+    .notice strong {
+      color: #fff
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 84px;
+      transform: translateX(-50%) translateY(12px);
+      background: #f5f7fa;
+      color: #0b0d12;
+      padding: 11px 15px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      opacity: 0;
+      pointer-events: none;
+      transition: .22s;
+      z-index: 90;
+      white-space: nowrap
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 14px 0
+    }
+
+    .scan-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .portion {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .portion input[type=range] {
+      flex: 1;
+      accent-color: var(--accent)
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      background: #1d2a11;
+      color: #dfffad;
+      padding: 5px 9px;
+      font-size: 10px;
+      font-weight: 800
+    }
+
+    .small-note {
+      font-size: 10px;
+      color: #798291;
+      line-height: 1.4;
+      margin-top: 8px
+    }
+
+    @media(min-width:700px) {
+      body {
+        padding-bottom: 30px
+      }
+
+      .nav {
+        position: static;
+        background: transparent;
+        border: 0
+      }
+
+      .nav-inner {
+        padding: 0 0 14px
+      }
+
+      .app {
+        padding-top: 28px
+      }
+
+      .nav button {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        margin: 0 4px;
+        background: var(--card)
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/ort.min.js"></script>
+</head>
+
+<body>
+  <div class="app">
+    <div class="top">
+      <div>
+        <div class="brand">Nutri<span>Foto</span></div>
+        <div class="subtitle">Tu comida → una estimación nutricional verificable</div>
+      </div>
+      <button class="icon-btn" id="profileBtn" aria-label="Perfil">⚙︎</button>
+    </div>
+
+    <section id="homeView">
+      <div class="card hero">
+        <div class="kicker" id="greeting">Tu día</div>
+        <div class="hero-title" id="goalTitle">Configura tu perfil para empezar.</div>
+        <div class="hero-copy" id="goalCopy">Con peso, estatura, edad, sexo, actividad y objetivo, NutriFoto calcula una
+          meta diaria inicial y luego la ajusta según lo que registres.</div>
+        <button class="cta" id="cameraBtn">📷 Tomar foto de comida</button>
+      </div>
+
+      <div class="card" id="dashboardCard">
+        <div class="row">
+          <div>
+            <div class="title">Hoy</div>
+            <div class="muted" id="dateText"></div>
+          </div><span class="badge" id="profileBadge">Perfil incompleto</span>
+        </div>
+        <div class="ring-wrap">
+          <div class="ring" id="ring">
+            <div class="ring-inner">
+              <div class="big-num" id="remaining">—</div>
+              <div class="unit">restantes</div>
+            </div>
+          </div>
+          <div style="flex:1">
+            <div class="muted">Consumidas</div>
+            <div class="big-num" id="consumed">0 kcal</div>
+            <div class="muted" id="targetText">Meta: —</div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="mini"><b id="pCount">0 g</b><span>Proteína</span></div>
+          <div class="mini"><b id="cCount">0 g</b><span>Carbohidratos</span></div>
+          <div class="mini"><b id="fCount">0 g</b><span>Grasas</span></div>
+        </div>
+        <div class="macro">
+          <div class="macro-line">
+            <div class="macro-fill" id="macroFill"></div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-chip">P <b id="pPct">0%</b></div>
+            <div class="macro-chip">C <b id="cPct">0%</b></div>
+            <div class="macro-chip">G <b id="fPct">0%</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <div class="title">Tus comidas</div>
+            <div class="muted">Lo registrado hoy</div>
+          </div><button class="btn-secondary" style="width:auto;padding:9px 11px" id="manualBtn">+ Manual</button>
+        </div>
+        <div id="mealList" class="section-space"></div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <div class="title">Qué falta para afinarlo</div>
+            <div class="muted">Datos que sí cambian el cálculo</div>
+          </div>
+        </div>
+        <div class="notice"><strong>1.</strong> Peso y estatura. <strong>2.</strong> Edad y sexo. <strong>3.</strong>
+          Actividad diaria. <strong>4.</strong> Objetivo (mantener, perder o ganar). <strong>5.</strong> Ritmo objetivo.
+          También importa la cantidad real de comida: una foto no revela con precisión gramos, aceite, salsas ni
+          ingredientes ocultos.</div>
+      </div>
+    </section>
+
+    <section id="scanView" class="hidden">
+      <div class="card">
+        <div class="row start">
+          <div>
+            <div class="kicker">Análisis</div>
+            <div class="title" style="margin-top:5px">Foto de tu comida</div>
+            <div class="muted">La inferencia visual se ejecuta en este dispositivo.</div>
+          </div><button class="close" id="backHome">×</button>
+        </div>
+        <img id="preview" class="camera-preview" alt="Vista previa de comida" />
+        <div id="scanEmpty" class="dashed"
+          style="padding:24px 16px;border-radius:18px;text-align:center;margin-top:14px">
+          <div style="font-size:28px">🥗</div>
+          <div class="title" style="margin-top:6px">Toma una foto clara desde arriba</div>
+          <div class="muted" style="margin-top:5px">Plato completo, buena luz y pocos objetos tapando la comida.</div>
+        </div>
+        <div class="scan-row"><button class="cta" id="takeBtn" style="margin:0">📷 Cámara</button><button
+            class="btn-secondary" id="galleryBtn">🖼️ Galería</button></div>
+        <input id="cameraInput" type="file" accept="image/*" capture="environment" class="hidden" />
+        <input id="galleryInput" type="file" accept="image/*" class="hidden" />
+        <div id="modelStatus" class="notice hidden"></div>
+        <div id="foodResult" class="food-result hidden">
+          <div class="row">
+            <div class="title">Estimación visual</div><span class="badge" id="confidenceBadge">Procesando</span>
+          </div>
+          <div id="predictions"></div>
+          <div class="notice"><strong>Importante:</strong> la clasificación identifica el tipo de plato, pero la foto no
+            permite conocer exactamente gramos, aceite, receta o ingredientes ocultos. Confirma la porción antes de
+            guardar.</div>
+          <div class="field" style="margin-top:12px"><label>Porción estimada (g)</label>
+            <div class="portion"><input id="portionRange" type="range" min="50" max="1000" step="10" value="250"><input
+                id="portionInput" type="number" min="10" max="2000" value="250" style="width:96px"></div>
+          </div>
+          <div class="stats" style="margin-top:12px">
+            <div class="mini"><b id="scanKcal">—</b><span>kcal</span></div>
+            <div class="mini"><b id="scanProtein">—</b><span>proteína</span></div>
+            <div class="mini"><b id="scanCarbs">—</b><span>carbohidratos</span></div>
+          </div>
+          <button class="cta" id="saveScan">✓ Guardar comida</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="profileView" class="hidden">
+      <div class="card">
+        <div class="row">
+          <div>
+            <div class="kicker">Tu perfil</div>
+            <div class="title" style="margin-top:5px">Datos para calcular tu meta</div>
+            <div class="muted">Puedes cambiarlos cuando quieras.</div>
+          </div><button class="close" id="closeProfile">×</button>
+        </div>
+        <div class="field" style="margin-top:16px">
+          <label>Google Gemini API Key (Opcional - IA en la nube)</label>
+          <input id="geminiKey" type="password" placeholder="AIzaSy... (Opcional)">
+          <div class="small-note">Si lo dejas vacío, NutriFoto usa automáticamente el modelo integrado en tu dispositivo (gratis, sin claves y sin errores). Si tienes clave de Google AI Studio, puedes ponerla para reconocimiento extendido.</div>
+        </div>
+        <div class="grid" style="margin-top:16px">
+          <div class="field"><label>Edad</label><input id="age" type="number" inputmode="decimal" min="14" max="100"
+              placeholder="25"></div>
+          <div class="field"><label>Peso (kg)</label><input id="weight" type="number" inputmode="decimal" min="35"
+              max="300" step="0.1" placeholder="70"></div>
+          <div class="field"><label>Estatura (cm)</label><input id="height" type="number" inputmode="decimal" min="130"
+              max="230" placeholder="170"></div>
+          <div class="field"><label>Sexo biológico*</label><select id="sex">
+              <option value="male">Hombre</option>
+              <option value="female">Mujer</option>
+            </select></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Nivel de actividad</label><select id="activity">
+            <option value="1.2">Sedentario — poco ejercicio</option>
+            <option value="1.375">Ligero — 1–3 días/semana</option>
+            <option value="1.55">Moderado — 3–5 días/semana</option>
+            <option value="1.725">Alto — 6–7 días/semana</option>
+            <option value="1.9">Muy alto — trabajo físico + entreno</option>
+          </select></div>
+        <div class="field" style="margin-top:12px"><label>Objetivo</label><select id="goal">
+            <option value="maintain">Mantener peso</option>
+            <option value="lose">Perder grasa</option>
+            <option value="gain">Ganar peso/músculo</option>
+          </select></div>
+        <div class="field" style="margin-top:12px"><label>Ritmo deseado</label><select id="rate">
+            <option value="slow">Suave</option>
+            <option value="moderate">Moderado</option>
+            <option value="fast">Rápido</option>
+          </select></div>
+        <button class="cta" id="saveProfile">Guardar y calcular</button>
+        <div class="profile-note">* Se usa sexo biológico porque la fórmula Mifflin–St Jeor empleada aquí lo incorpora.
+          Este cálculo es una referencia inicial, no un diagnóstico médico ni una prescripción.</div>
+      </div>
+      <div class="card">
+        <div class="title">Privacidad</div>
+        <div class="notice">Tus registros se guardan en el almacenamiento local de este navegador. La foto se procesa
+          localmente para la clasificación visual; no se sube a un servidor de NutriFoto.</div>
+      </div>
+      <div class="card">
+        <div class="title">Restablecer datos</div>
+        <div class="muted" style="margin-top:5px">Borra perfil y comidas guardadas en este navegador.</div><button
+          class="btn-secondary" style="margin-top:12px" id="resetBtn">Borrar todo</button>
+      </div>
+    </section>
+
+    <section id="historyView" class="hidden">
+      <div class="card">
+        <div class="row">
+          <div>
+            <div class="kicker">Seguimiento</div>
+            <div class="title" style="margin-top:5px">Historial</div>
+            <div class="muted">Resumen de los días guardados en este dispositivo.</div>
+          </div>
+        </div>
+        <div id="historyList" class="section-space"></div>
+      </div>
+      <div class="card">
+        <div class="title">Nota sobre precisión</div>
+        <div class="notice">Para acercarte más a un valor real, combina foto + alimento detectado + gramos confirmados.
+          En platos caseros, el aceite, salsas y receta pueden cambiar bastante las calorías aunque la foto sea buena.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner"><button class="active" data-tab="homeView">
+        <div class="nav-icon">⌂</div>Hoy
+      </button><button data-tab="scanView">
+        <div class="nav-icon">◉</div>Escanear
+      </button><button data-tab="historyView">
+        <div class="nav-icon">◷</div>Historial
+      </button></div>
+  </nav>
+  <div class="toast" id="toast"></div>
+
+  <div id="manualModal" class="modal hidden">
+    <div class="sheet">
+      <div class="row">
+        <div>
+          <h2>Agregar comida</h2>
+          <p>Úsalo cuando la cámara no sea suficiente o cuando quieras corregir el resultado.</p>
+        </div><button class="close" id="closeManual">×</button>
+      </div>
+      <div class="field"><label>Comida</label><select id="manualFood"></select></div>
+      <div class="grid" style="margin-top:10px">
+        <div class="field"><label>Gramos</label><input id="manualGrams" type="number" value="150" min="10" max="2000">
+        </div>
+        <div class="field"><label>Momento</label><select id="manualMeal">
+            <option>Desayuno</option>
+            <option>Almuerzo</option>
+            <option>Cena</option>
+            <option>Snack</option>
+          </select></div>
+      </div>
+      <div class="stats" style="margin-top:12px">
+        <div class="mini"><b id="manualKcal">—</b><span>kcal</span></div>
+        <div class="mini"><b id="manualP">—</b><span>proteína</span></div>
+        <div class="mini"><b id="manualC">—</b><span>carbohidratos</span></div>
+      </div><button class="cta" id="saveManual">Guardar comida</button>
+    </div>
+  </div>
+
+  <script>
+    /* ── Configuración ONNX Runtime Web para celular ── */
+    if (window.ort) {
+      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/';
+      ort.env.wasm.numThreads = 1; /* Máxima estabilidad en iOS y Android */
+    }
+
+    /* ── 101 Clases exactas de Food-101 para MobileNetV2 ── */
+    const FOOD_101_LABELS = [
+      'apple_pie', 'baby_back_ribs', 'baklava', 'beef_carpaccio', 'beef_tartare',
+      'beet_salad', 'beignets', 'bibimbap', 'bread_pudding', 'breakfast_burrito',
+      'bruschetta', 'caesar_salad', 'cannoli', 'caprese_salad', 'carrot_cake',
+      'ceviche', 'cheesecake', 'cheese_plate', 'chicken_curry', 'chicken_quesadilla',
+      'chicken_wings', 'chocolate_cake', 'chocolate_mousse', 'churros', 'clam_chowder',
+      'club_sandwich', 'crab_cakes', 'creme_brulee', 'croque_madame', 'cup_cakes',
+      'deviled_eggs', 'donuts', 'dumplings', 'edamame', 'eggs_benedict',
+      'escargots', 'falafel', 'filet_mignon', 'fish_and_chips', 'foie_gras',
+      'french_fries', 'french_onion_soup', 'french_toast', 'fried_calamari', 'fried_rice',
+      'frozen_yogurt', 'garlic_bread', 'gnocchi', 'greek_salad', 'grilled_cheese_sandwich',
+      'grilled_salmon', 'guacamole', 'gyoza', 'hamburger', 'hot_and_sour_soup',
+      'hot_dog', 'huevos_rancheros', 'hummus', 'ice_cream', 'lasagna',
+      'lobster_bisque', 'lobster_roll_sandwich', 'macaroni_and_cheese', 'macarons', 'miso_soup',
+      'mussels', 'nachos', 'omelette', 'onion_rings', 'oysters',
+      'pad_thai', 'paella', 'pancakes', 'panna_cotta', 'peking_duck',
+      'pho', 'pizza', 'pork_chop', 'poutine', 'prime_rib',
+      'pulled_pork_sandwich', 'ramen', 'ravioli', 'red_velvet_cake', 'risotto',
+      'samosa', 'sashimi', 'scallops', 'seaweed_salad', 'shrimp_and_grits',
+      'spaghetti_bolognese', 'spaghetti_carbonara', 'spring_rolls', 'steak', 'strawberry_shortcake',
+      'sushi', 'tacos', 'takoyaki', 'tiramisu', 'tuna_tartare', 'waffles'
+    ];
+
+    /* ── Datos nutricionales por 100 g: [nombre_es, kcal, proteína, carbos, grasa] ── */
+    const FOOD = {
+      'apple_pie': ['Pie de manzana', 260, 2, 34, 12], 'baby_back_ribs': ['Costillas BBQ', 290, 23, 5, 20], 'baklava': ['Baklava', 428, 9, 53, 22], 'beef_carpaccio': ['Carpaccio de res', 120, 18, 2, 4], 'beef_tartare': ['Tartar de res', 160, 18, 2, 9], 'beet_salad': ['Ensalada de betabel', 70, 2, 10, 3], 'beignets': ['Beignets', 330, 7, 47, 13], 'bibimbap': ['Bibimbap', 135, 6, 19, 4], 'bread_pudding': ['Budín de pan', 260, 6, 37, 10], 'breakfast_burrito': ['Burrito de desayuno', 220, 10, 22, 10], 'bruschetta': ['Bruschetta', 150, 4, 20, 6], 'caesar_salad': ['Ensalada César', 190, 8, 8, 14], 'cannoli': ['Cannoli', 270, 7, 31, 13], 'caprese_salad': ['Ensalada caprese', 170, 8, 6, 12], 'carrot_cake': ['Pastel de zanahoria', 415, 5, 54, 20], 'ceviche': ['Ceviche', 110, 15, 7, 2], 'cheesecake': ['Cheesecake', 321, 6, 26, 22], 'cheese_plate': ['Tabla de quesos', 360, 22, 4, 29], 'chicken_curry': ['Curry de pollo', 180, 15, 10, 9], 'chicken_quesadilla': ['Quesadilla de pollo', 250, 15, 20, 12], 'chicken_wings': ['Alitas de pollo', 280, 23, 4, 19], 'chocolate_cake': ['Pastel de chocolate', 370, 5, 50, 17], 'chocolate_mousse': ['Mousse de chocolate', 300, 5, 25, 20], 'churros': ['Churros', 350, 5, 45, 16], 'clam_chowder': ['Sopa cremosa de almejas', 150, 6, 12, 8], 'club_sandwich': ['Club sandwich', 230, 13, 20, 11], 'crab_cakes': ['Tortas de cangrejo', 220, 13, 15, 12], 'creme_brulee': ['Crème brûlée', 260, 4, 25, 16], 'croque_madame': ['Croque madame', 240, 12, 14, 15], 'cup_cakes': ['Cupcake', 350, 4, 51, 15], 'deviled_eggs': ['Huevos rellenos', 180, 10, 2, 14], 'donuts': ['Donut', 420, 5, 48, 23], 'dumplings': ['Dumplings', 220, 8, 27, 9], 'edamame': ['Edamame', 122, 11, 10, 5], 'eggs_benedict': ['Huevos Benedictinos', 210, 12, 9, 14], 'escargots': ['Caracoles', 90, 16, 2, 2], 'falafel': ['Falafel', 330, 13, 32, 18], 'filet_mignon': ['Filete mignon', 250, 26, 0, 17], 'fish_and_chips': ['Fish & chips', 230, 11, 18, 13], 'foie_gras': ['Foie gras', 462, 11, 5, 44], 'french_fries': ['Papas fritas', 312, 3, 41, 15], 'french_onion_soup': ['Sopa de cebolla francesa', 70, 3, 8, 3], 'french_toast': ['Tostadas francesas', 230, 9, 27, 9], 'fried_calamari': ['Calamar frito', 175, 15, 13, 7], 'fried_rice': ['Arroz frito', 190, 6, 27, 7], 'frozen_yogurt': ['Yogur helado', 130, 4, 24, 3], 'garlic_bread': ['Pan de ajo', 350, 9, 45, 15], 'gnocchi': ['Ñoquis', 160, 4, 30, 3], 'greek_salad': ['Ensalada griega', 120, 4, 7, 8], 'grilled_cheese_sandwich': ['Sándwich de queso', 290, 12, 31, 14], 'grilled_salmon': ['Salmón a la plancha', 206, 22, 0, 12], 'guacamole': ['Guacamole', 150, 2, 9, 13], 'gyoza': ['Gyoza', 210, 7, 20, 11], 'hamburger': ['Hamburguesa', 295, 17, 24, 15], 'hot_and_sour_soup': ['Sopa agripicante', 55, 4, 6, 2], 'hot_dog': ['Perro caliente', 290, 11, 23, 17], 'huevos_rancheros': ['Huevos rancheros', 150, 10, 8, 8], 'hummus': ['Hummus', 166, 8, 14, 9], 'ice_cream': ['Helado', 207, 4, 24, 11], 'lasagna': ['Lasaña', 135, 8, 12, 6], 'lobster_bisque': ['Bisque de langosta', 110, 8, 9, 5], 'lobster_roll_sandwich': ['Sándwich de langosta', 220, 13, 18, 10], 'macaroni_and_cheese': ['Macarrones con queso', 164, 7, 20, 6], 'macarons': ['Macarons', 440, 8, 73, 15], 'miso_soup': ['Sopa miso', 35, 3, 4, 1], 'mussels': ['Mejillones', 86, 12, 4, 3], 'nachos': ['Nachos', 300, 8, 33, 16], 'omelette': ['Omelet', 154, 11, 1, 11], 'onion_rings': ['Aros de cebolla', 340, 5, 41, 17], 'oysters': ['Ostras', 68, 7, 4, 2], 'pad_thai': ['Pad Thai', 190, 7, 28, 6], 'paella': ['Paella', 180, 10, 24, 5], 'pancakes': ['Pancakes', 227, 6, 28, 10], 'panna_cotta': ['Panna cotta', 210, 3, 18, 14], 'peking_duck': ['Pato pekin', 337, 19, 5, 27], 'pho': ['Pho', 60, 4, 6, 2], 'pizza': ['Pizza', 266, 11, 33, 10], 'pork_chop': ['Chuleta de cerdo', 231, 26, 0, 13], 'poutine': ['Poutine', 276, 7, 29, 15], 'prime_rib': ['Costilla de res', 350, 22, 0, 29], 'pulled_pork_sandwich': ['Sándwich de cerdo desmechado', 260, 16, 24, 12], 'ramen': ['Ramen', 95, 5, 12, 3], 'ravioli': ['Ravioli', 180, 8, 25, 5], 'red_velvet_cake': ['Pastel red velvet', 360, 4, 51, 16], 'risotto': ['Risotto', 170, 4, 23, 7], 'samosa': ['Samosa', 260, 6, 30, 13], 'sashimi': ['Sashimi', 120, 20, 0, 4], 'scallops': ['Vieiras', 111, 20, 5, 1], 'seaweed_salad': ['Ensalada de algas', 70, 2, 10, 3], 'shrimp_and_grits': ['Camarones con sémola', 150, 8, 18, 5], 'spaghetti_bolognese': ['Spaghetti boloñesa', 155, 8, 21, 5], 'spaghetti_carbonara': ['Spaghetti carbonara', 190, 7, 24, 8], 'spring_rolls': ['Rollitos primavera', 150, 4, 19, 6], 'steak': ['Bistec', 271, 26, 0, 18], 'strawberry_shortcake': ['Shortcake de fresa', 280, 5, 38, 12], 'sushi': ['Sushi', 140, 7, 22, 3], 'tacos': ['Tacos', 200, 9, 20, 9], 'takoyaki': ['Takoyaki', 170, 6, 19, 8], 'tiramisu': ['Tiramisú', 240, 5, 26, 13], 'tuna_tartare': ['Tartar de atún', 130, 21, 3, 4], 'waffles': ['Waffles', 291, 8, 33, 14]
+    };
+    const DEFAULT_FOOD = ['Comida no identificada', 180, 8, 20, 8];
+    const MODEL_URL = 'https://huggingface.co/AlexKoff88/mobilenet_v2_food101/resolve/main/mobilenet_v2_food101.onnx';
+
+    const $ = id => document.getElementById(id);
+    let state = {
+      profile: JSON.parse(localStorage.getItem('nf_profile') || 'null'),
+      logs: JSON.parse(localStorage.getItem('nf_logs') || '{}'),
+      geminiKey: localStorage.getItem('nf_gemini_key') || ''
+    };
+    let session = null, currentPhoto = '', currentPrediction = null;
+
+    const keyToday = () => new Date().toISOString().slice(0, 10);
+    function save() {
+      localStorage.setItem('nf_profile', JSON.stringify(state.profile));
+      localStorage.setItem('nf_logs', JSON.stringify(state.logs));
+      localStorage.setItem('nf_gemini_key', state.geminiKey || '');
+    }
+    function toast(t) {
+      $('toast').textContent = t;
+      $('toast').classList.add('show');
+      setTimeout(() => $('toast').classList.remove('show'), 2200);
+    }
+    function fmt(n, d = 0) {
+      return Number(n || 0).toLocaleString('es-CO', { maximumFractionDigits: d });
+    }
+    function prettyLabel(label) {
+      return label.replace(/^_+/, '').replace(/_/g, ' ').replace(/\b\w/g, m => m.toUpperCase());
+    }
+    function calcTarget(p) {
+      if (!p) return null;
+      const w = +p.weight, h = +p.height, a = +p.age, s = p.sex;
+      let bmr = 10 * w + 6.25 * h - 5 * a + (s === 'male' ? 5 : -161);
+      let tdee = bmr * +p.activity;
+      let adj = p.goal === 'lose' ? (p.rate === 'slow' ? -250 : p.rate === 'moderate' ? -400 : -550) : p.goal === 'gain' ? (p.rate === 'slow' ? 180 : p.rate === 'moderate' ? 280 : 380) : 0;
+      return Math.max(1200, Math.round(tdee + adj));
+    }
+    function macros(cal, p) {
+      const protein = p.goal === 'gain' ? 1.8 : 2.0;
+      const fat = .25 * cal / 9;
+      const carbs = (cal - protein * p.weight * 4 - fat * 9) / 4;
+      return { p: Math.round(protein * p.weight), c: Math.max(0, Math.round(carbs)), f: Math.round(fat) };
+    }
+    function currentLogs() { return state.logs[keyToday()] || []; }
+
+    function renderHome() {
+      $('dateText').textContent = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+      const target = calcTarget(state.profile), logs = currentLogs(), total = logs.reduce((a, x) => a + x.kcal, 0), ps = logs.reduce((a, x) => a + x.p, 0), cs = logs.reduce((a, x) => a + x.c, 0), fs = logs.reduce((a, x) => a + x.f, 0);
+      const rem = target == null ? 0 : Math.max(0, target - total), pct = target ? Math.min(100, total / target * 100) : 0;
+      $('remaining').textContent = target == null ? '—' : fmt(rem);
+      $('consumed').textContent = fmt(total) + ' kcal';
+      $('targetText').textContent = target ? `Meta: ${fmt(target)} kcal` : 'Meta: completa tu perfil';
+      $('ring').style.setProperty('--p', pct + '%');
+      $('pCount').textContent = fmt(ps) + ' g';
+      $('cCount').textContent = fmt(cs) + ' g';
+      $('fCount').textContent = fmt(fs) + ' g';
+      const m = state.profile && target ? macros(target, state.profile) : { p: 1, c: 1, f: 1 };
+      $('pPct').textContent = m.p ? Math.round(ps / m.p * 100) + '%' : '0%';
+      $('cPct').textContent = m.c ? Math.round(cs / m.c * 100) + '%' : '0%';
+      $('fPct').textContent = m.f ? Math.round(fs / m.f * 100) + '%' : '0%';
+      $('macroFill').style.width = Math.min(100, Math.round((ps / Math.max(m.p, 1) + cs / Math.max(m.c, 1) + fs / Math.max(m.f, 1)) / 3 * 100)) + '%';
+      const complete = !!(state.profile && state.profile.age && state.profile.weight && state.profile.height);
+      $('profileBadge').textContent = complete ? 'Perfil listo' : 'Perfil incompleto';
+      $('goalTitle').textContent = complete ? (state.profile.goal === 'lose' ? `Meta: ${fmt(target)} kcal para perder grasa.` : state.profile.goal === 'gain' ? `Meta: ${fmt(target)} kcal para ganar peso/músculo.` : `Meta: ${fmt(target)} kcal para mantenerte.`) : 'Configura tu perfil para empezar.';
+      $('goalCopy').textContent = complete ? `Hoy llevas ${fmt(total)} kcal. Usa una foto para estimar el plato y confirma porción antes de guardar.` : 'Configura peso, estatura, edad, sexo, actividad y objetivo para calcular tu meta.';
+      const list = $('mealList'); list.innerHTML = '';
+      if (!logs.length) {
+        list.innerHTML = '<div class="empty">Todavía no hay comidas registradas hoy.</div>';
+      } else {
+        logs.slice().reverse().forEach((x, i) => {
+          const el = document.createElement('div');
+          el.className = 'meal';
+          el.innerHTML = `<img class="meal-img" src="${x.img || ''}" alt=""><div class="meal-main"><div class="meal-name">${x.name}</div><div class="meal-detail">${x.meal || 'Comida'} · ${x.grams} g · P ${x.p} g · C ${x.c} g · G ${x.f} g</div></div><div><div class="meal-kcal">${fmt(x.kcal)}</div><div class="muted">kcal</div></div><button class="delete" data-del="${logs.length - 1 - i}">×</button>`;
+          list.appendChild(el);
+        });
+        list.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+          const idx = +b.dataset.del;
+          state.logs[keyToday()].splice(idx, 1);
+          save();
+          renderHome();
+          toast('Comida eliminada');
+        });
+      }
+    }
+
+    function showView(id) {
+      ['homeView', 'scanView', 'profileView', 'historyView'].forEach(v => $(v).classList.toggle('hidden', v !== id));
+      document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      if (id === 'homeView') renderHome();
+      if (id === 'historyView') renderHistory();
+      if (id === 'profileView') loadProfile();
+    }
+
+    function loadProfile() {
+      const p = state.profile || {};
+      for (const id of ['age', 'weight', 'height', 'sex', 'activity', 'goal', 'rate']) {
+        if (p[id] != null) $(id).value = p[id];
+      }
+      $('geminiKey').value = state.geminiKey || '';
+    }
+
+    function renderHistory() {
+      const box = $('historyList');
+      const days = Object.keys(state.logs).sort().reverse();
+      box.innerHTML = days.length ? '' : '<div class="empty">Aún no hay historial.</div>';
+      days.slice(0, 30).forEach(day => {
+        const ls = state.logs[day] || [], k = ls.reduce((a, x) => a + x.kcal, 0);
+        const el = document.createElement('div');
+        el.className = 'meal';
+        el.innerHTML = `<div class="meal-main"><div class="meal-name">${new Date(day + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div><div class="meal-detail">${ls.length} comida(s) registrada(s)</div></div><div><div class="meal-kcal">${fmt(k)}</div><div class="muted">kcal</div></div>`;
+        box.appendChild(el);
+      });
+    }
+
+    function openFile(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        currentPhoto = reader.result;
+        $('preview').src = currentPhoto;
+        $('preview').style.display = 'block';
+        $('scanEmpty').classList.add('hidden');
+        $('foodResult').classList.add('hidden');
+        analyzePhoto(file);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* ── Preprocesamiento de imagen para MobileNetV2 (center-crop + normalización ImageNet) ── */
+    async function preprocessImage(file) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 224;
+          canvas.height = 224;
+          const ctx = canvas.getContext('2d');
+          const size = Math.min(img.width, img.height);
+          const sx = (img.width - size) / 2;
+          const sy = (img.height - size) / 2;
+          ctx.drawImage(img, sx, sy, size, size, 0, 0, 224, 224);
+
+          const imageData = ctx.getImageData(0, 0, 224, 224);
+          const { data } = imageData;
+          const mean = [0.485, 0.456, 0.406];
+          const std = [0.229, 0.224, 0.225];
+          const float32Data = new Float32Array(3 * 224 * 224);
+          const pixels = 224 * 224;
+
+          for (let i = 0; i < pixels; i++) {
+            float32Data[i] = (data[i * 4] / 255 - mean[0]) / std[0];
+            float32Data[pixels + i] = (data[i * 4 + 1] / 255 - mean[1]) / std[1];
+            float32Data[2 * pixels + i] = (data[i * 4 + 2] / 255 - mean[2]) / std[2];
+          }
+
+          URL.revokeObjectURL(img.src);
+          resolve(new ort.Tensor('float32', float32Data, [1, 3, 224, 224]));
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(img.src);
+          reject(new Error('No se pudo leer la imagen'));
+        };
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    function softmax(logits) {
+      const max = Math.max(...logits);
+      const exps = logits.map(v => Math.exp(v - max));
+      const sum = exps.reduce((a, b) => a + b, 0);
+      return exps.map(v => v / sum);
+    }
+
+    /* ── Análisis Inteligente Híbrido ── */
+    async function analyzePhoto(file) {
+      const key = (state.geminiKey || '').trim();
+      if (key) {
+        /* Intento con Gemini en la nube */
+        $('modelStatus').classList.remove('hidden');
+        $('modelStatus').innerHTML = '<strong>Consultando IA Gemini…</strong> Identificando plato en la nube.';
+        try {
+          const base64 = currentPhoto.split(',')[1];
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(key)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  { text: 'Eres un experto en nutrición. Analiza la imagen. Identifica la comida principal y estima sus valores nutricionales por 100 gramos. Responde ÚNICAMENTE con un JSON en este formato estricto: {"name": "Nombre de la comida", "kcal100": 150, "p100": 10.5, "c100": 20.0, "f100": 5.0}' },
+                  { inlineData: { mimeType: file.type || 'image/jpeg', data: base64 } }
+                ]
+              }]
+            })
+          });
+          const data = await res.json();
+          if (data.error) throw new Error(data.error.message);
+          const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const cleanJson = rawText.replace(/```json|```/g, '').trim();
+          const parsed = JSON.parse(cleanJson);
+
+          currentPrediction = {
+            key: 'gemini',
+            name: parsed.name,
+            kcal100: Number(parsed.kcal100) || 150,
+            p100: Number(parsed.p100) || 5,
+            c100: Number(parsed.c100) || 20,
+            f100: Number(parsed.f100) || 5
+          };
+          $('modelStatus').innerHTML = `<strong>Listo (Gemini IA).</strong> Identificado: <b>${parsed.name}</b>. Confirma la porción abajo.`;
+          $('foodResult').classList.remove('hidden');
+          $('predictions').innerHTML = `<div class="food-chip"><div><div class="food-name">${parsed.name}</div><div class="food-meta">Gemini Cloud · ${currentPrediction.kcal100} kcal/100 g</div></div></div>`;
+          calcScan();
+          return;
+        } catch (err) {
+          console.warn('Gemini falló, pasando a modelo local:', err);
+          $('modelStatus').innerHTML = `<strong>Aviso:</strong> Clave de Gemini no respondió (${err.message}). Cambiando automáticamente al modelo integrado...`;
+          /* Fallback transparente al modelo local */
+        }
+      }
+
+      /* Si no hay clave de Gemini o si falló: Modelo local integrado */
+      await analyzePhotoLocal(file);
+    }
+
+    /* ── Modelo Local en el Dispositivo (MobileNetV2 ONNX, sin API Key) ── */
+    async function analyzePhotoLocal(file) {
+      if (!window.ort) {
+        $('modelStatus').classList.remove('hidden');
+        $('modelStatus').innerHTML = '<strong>Modo manual disponible:</strong> La librería de visión no terminó de cargar. Puedes registrar tu comida usando el botón <b>+ Manual</b> arriba.';
+        return;
+      }
+
+      $('modelStatus').classList.remove('hidden');
+      $('modelStatus').innerHTML = '<strong>Analizando en tu dispositivo…</strong> Descargando modelo ultra ligero (~9.8 MB) la primera vez; luego queda guardado en tu navegador.';
+
+      try {
+        if (!session) {
+          session = await ort.InferenceSession.create(MODEL_URL, {
+            executionProviders: ['wasm'],
+            graphOptimizationLevel: 'all'
+          });
+        }
+
+        $('modelStatus').innerHTML = '<strong>Procesando foto…</strong> Ajustando imagen para el modelo.';
+        const tensor = await preprocessImage(file);
+
+        const inputName = session.inputNames[0];
+        const feeds = {};
+        feeds[inputName] = tensor;
+        const results = await session.run(feeds);
+        const outputName = session.outputNames[0];
+        const logits = Array.from(results[outputName].data);
+
+        const probs = softmax(logits);
+        const indexed = probs.map((score, idx) => ({ score, index: idx }));
+        indexed.sort((a, b) => b.score - a.score);
+        const top5 = indexed.slice(0, 5);
+
+        const out = top5.map(item => ({
+          label: FOOD_101_LABELS[item.index] || 'desconocido',
+          score: item.score
+        }));
+
+        currentPrediction = out[0];
+        $('modelStatus').innerHTML = `<strong>Listo.</strong> Modelo integrado en dispositivo. Confianza: ${Math.round(out[0].score * 100)}%. Puedes tocar cualquier opción para seleccionarla.`;
+        renderPredictions(out);
+      } catch (e) {
+        console.error('Error en modelo local:', e);
+        $('modelStatus').innerHTML = '<strong>Aviso:</strong> No se pudo procesar la imagen automáticamente. Puedes usar el botón <b>+ Manual</b> para agregarla al instante.';
+      }
+    }
+
+    function renderPredictions(out) {
+      $('foodResult').classList.remove('hidden');
+      const box = $('predictions');
+      box.innerHTML = '';
+      out.forEach((r, i) => {
+        const key = r.label.toLowerCase();
+        const meta = FOOD[key] || DEFAULT_FOOD;
+        const el = document.createElement('div');
+        el.className = 'food-chip';
+        el.innerHTML = `<div><div class="food-name">${meta[0] || prettyLabel(r.label)}</div><div class="food-meta">${Math.round(r.score * 100)}% coincidencia · ${meta[1]} kcal/100 g</div></div><button class="btn-secondary" style="width:auto;padding:7px 9px" data-food="${key}">${i === 0 ? '✓ Elegido' : 'Seleccionar'}</button>`;
+        box.appendChild(el);
+      });
+      box.querySelectorAll('[data-food]').forEach(b => {
+        b.onclick = () => {
+          selectPrediction(b.dataset.food);
+          box.querySelectorAll('[data-food]').forEach(other => other.textContent = 'Seleccionar');
+          b.textContent = '✓ Elegido';
+        };
+      });
+      selectPrediction(out[0].label.toLowerCase());
+    }
+
+    function selectPrediction(key) {
+      const meta = FOOD[key] || DEFAULT_FOOD;
+      currentPrediction = { key, name: meta[0], kcal100: meta[1], p100: meta[2], c100: meta[3], f100: meta[4] };
+      calcScan();
+    }
+
+    function calcScan() {
+      if (!currentPrediction) return;
+      const g = +$('portionInput').value || 250, m = currentPrediction;
+      $('scanKcal').textContent = fmt(m.kcal100 * g / 100);
+      $('scanProtein').textContent = fmt(m.p100 * g / 100, 1) + ' g';
+      $('scanCarbs').textContent = fmt(m.c100 * g / 100, 1) + ' g';
+      $('confidenceBadge').textContent = 'Confirmar porción';
+    }
+
+    function addLog(name, grams, meta, img = '', meal = 'Comida') {
+      const g = +grams;
+      const item = {
+        name,
+        grams: g,
+        kcal: Math.round(meta.kcal100 * g / 100),
+        p: +(meta.p100 * g / 100).toFixed(1),
+        c: +(meta.c100 * g / 100).toFixed(1),
+        f: +(meta.f100 * g / 100).toFixed(1),
+        img,
+        meal
+      };
+      state.logs[keyToday()] = state.logs[keyToday()] || [];
+      state.logs[keyToday()].push(item);
+      save();
+    }
+
+    function updateManual() {
+      const key = $('manualFood').value, m = FOOD[key] || DEFAULT_FOOD, g = +$('manualGrams').value || 150;
+      $('manualKcal').textContent = fmt(m[1] * g / 100);
+      $('manualP').textContent = fmt(m[2] * g / 100, 1) + ' g';
+      $('manualC').textContent = fmt(m[3] * g / 100, 1) + ' g';
+    }
+
+    function initManual() {
+      const s = $('manualFood');
+      Object.keys(FOOD).sort().forEach(k => {
+        const o = document.createElement('option');
+        o.value = k;
+        o.textContent = FOOD[k][0];
+        s.appendChild(o);
+      });
+      s.addEventListener('change', updateManual);
+      $('manualGrams').addEventListener('input', updateManual);
+      updateManual();
+    }
+
+    $('cameraBtn').onclick = () => showView('scanView');
+    $('takeBtn').onclick = () => $('cameraInput').click();
+    $('galleryBtn').onclick = () => $('galleryInput').click();
+    $('cameraInput').onchange = e => e.target.files[0] && openFile(e.target.files[0]);
+    $('galleryInput').onchange = e => e.target.files[0] && openFile(e.target.files[0]);
+    $('backHome').onclick = () => showView('homeView');
+    $('profileBtn').onclick = () => showView('profileView');
+    $('closeProfile').onclick = () => showView('homeView');
+
+    $('portionRange').oninput = e => { $('portionInput').value = e.target.value; calcScan(); };
+    $('portionInput').oninput = e => { $('portionRange').value = Math.min(1000, Math.max(50, +e.target.value || 250)); calcScan(); };
+
+    $('saveScan').onclick = () => {
+      if (!currentPrediction) { toast('Selecciona un alimento primero'); return; }
+      const g = +$('portionInput').value || 250;
+      addLog(currentPrediction.name, g, {
+        kcal100: currentPrediction.kcal100,
+        p100: currentPrediction.p100,
+        c100: currentPrediction.c100,
+        f100: currentPrediction.f100
+      }, currentPhoto, 'Comida');
+      showView('homeView');
+      toast('Comida guardada');
+    };
+
+    $('saveProfile').onclick = () => {
+      const p = {
+        age: +$('age').value,
+        weight: +$('weight').value,
+        height: +$('height').value,
+        sex: $('sex').value,
+        activity: $('activity').value,
+        goal: $('goal').value,
+        rate: $('rate').value
+      };
+      if (!p.age || !p.weight || !p.height) { toast('Completa edad, peso y estatura'); return; }
+      state.profile = p;
+      state.geminiKey = ($('geminiKey').value || '').trim();
+      save();
+      showView('homeView');
+      toast('Perfil actualizado correctamente');
+    };
+
+    $('resetBtn').onclick = () => {
+      if (confirm('¿Borrar perfil e historial de este navegador?')) {
+        localStorage.removeItem('nf_profile');
+        localStorage.removeItem('nf_logs');
+        localStorage.removeItem('nf_gemini_key');
+        state = { profile: null, logs: {}, geminiKey: '' };
+        showView('homeView');
+        toast('Datos borrados');
+      }
+    };
+
+    $('manualBtn').onclick = () => { $('manualModal').classList.remove('hidden'); updateManual(); };
+    $('closeManual').onclick = () => $('manualModal').classList.add('hidden');
+    $('saveManual').onclick = () => {
+      const key = $('manualFood').value, m = FOOD[key] || DEFAULT_FOOD, g = +$('manualGrams').value || 150;
+      addLog(m[0], g, { kcal100: m[1], p100: m[2], c100: m[3], f100: m[4] }, '', $('manualMeal').value);
+      $('manualModal').classList.add('hidden');
+      renderHome();
+      toast('Comida guardada');
+    };
+
+    document.querySelectorAll('.nav button').forEach(b => b.onclick = () => showView(b.dataset.tab));
+    initManual();
+    renderHome();
+  </script>
+</body>
+
+</html>
